@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>메뉴 수정</h2>
+
+<form th:action="@{/menu/modify}" th:object="${menu}" method="post">
+    <input type="hidden" th:field="*{menuCode}" />
+    <div>
+        <label for="name">메뉴 이름:</label>
+        <input type="text" id="name" th:field="*{menuName}" required />
+    </div>
+    <div>
+        <label for="price">메뉴 가격:</label>
+        <input type="number" id="price" th:field="*{menuPrice}" required />
+    </div>
+    <div>
+        <label for="categoryCode">카테고리 코드:</label>
+        <select name="categoryCode" id="categoryCode" th:field="*{categoryCode}" required></select>
+    </div>
+    <div>
+        <label for="orderableStatus">판매 상태(Y/N):</label>
+        <input type="text" id="orderableStatus" th:field="*{orderableStatus}" required />
+    </div>
+    <div>
+        <div>
+            <button type="submit">수정하기</button>
+        </div>
+        <div>
+            <a href="javascript:history.back()">취소(a 태그 사용)</a>
+            <button onclick="history.back()">취소(button 태그 사용)</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    /* 설명. fetch 요청을 통해 카테고리 코드 드롭다운 동적으로 채우기 */
+    document.addEventListener('DOMContentLoaded', function() {
+
+        /* 설명. 현재 보고있는 메뉴의 카테고리 번호를 담을 currentCategoryCode 변수 선언. */
+        const currentCategoryCode = `[[${menu.categoryCode}]]`;
+        // console.log(currentCategoryCode);
+        fetch("/menu/category")
+            .then(res => res.json())
+            .then(data => {
+                const categoryCodeSelect = document.getElementById('categoryCode');
+                console.log(data);
+                // 설명. 초기 `<option>`을 설정. 예: <option value="">카테고리를 선택하세요</option>
+                data.forEach(category => {
+                    console.log(category);
+                    const option = document.createElement('option');
+                    option.value = category.categoryCode;
+                    option.textContent = category.categoryName;
+
+                    // 설명. Thymeleaf로부터 받은 값으로 `selected` 속성 설정
+                    if (category.categoryCode.toString() === currentCategoryCode.toString()) {
+                        option.selected = true;
+                    }
+
+                    categoryCodeSelect.appendChild(option);
+                });
+
+                /* 설명. Thymeleaf를 통해 설정된 기존 값으로 select의 value를 설정하는 부분을 추가한다. */
+                /* 설명. 이 부분은 클라이언트 사이드 JavaScript가 아니라 서버 사이드 Thymeleaf 처리 후에 실행된다. */
+                categoryCodeSelect.value = currentCategoryCode;
+            });
+    });
+</script>
+</body>
+</html>

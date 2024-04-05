@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:include="common/header.html"></div>
+    <h3>신규 메뉴 등록</h3>
+    <form action="/menu/regist" method="post" enctype="multipart/form-data">
+        <label>메뉴 이름 : </label><input type="text" name="menuName"><br>
+        <label>메뉴 가격 : </label><input type="number" name="menuPrice"><br>
+        <label>카테고리 코드 : </label>
+        <select name="categoryCode" id="categoryCode"></select><br>
+        <label>판매 상태 : </label>
+        <select name="orderableStatus">
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+        </select><br>
+        파일 : <input type="file" name="singleFile"><br>
+
+        <input type="submit" value="전송">
+    </form>
+
+<!--    <h3>1. single file 업로드</h3>-->
+<!--    <form action="single-file" method="post" enctype="multipart/form-data">-->
+
+<!--        파일 : <input type="file" name="singleFile"><br>-->
+<!--        파일 설명 : <input type="text" name="singleFileDescription"><br>-->
+<!--        <input type="submit" value="업로드">-->
+<!--    </form>-->
+
+
+    <script>
+        // 해당 페이지가 열리면서 바로 실행됨
+        fetch('/menu/category')   // "/menu/category" 경로로 fetch 요청(GET)을 보냄
+            .then(res => res.json())   // 서버로부터 받은 응답을 json 형식으로 반환하는 Promise객체 반환
+            .then(jsonData => {
+                console.log(jsonData);   // 위에서 변환된 json 출력
+                const $categoryCode = document.getElementById('categoryCode');   // id가 'categoryCode'인 요소(select)를 선택
+                console.log($categoryCode);   // 선택한 요소를 콘솔에 출력(확인용)
+
+                for (let index in jsonData) {   // 배열 형태의 응답 데이터를 반복문을 사용해 각 요소별로 접근
+                    const $option = document.createElement('option');   // option 요소를 생성
+                    $option.value = jsonData[index].categoryCode;   // 생성한 option 요소의 value를 data의 categoryCode로 설정
+                    $option.textContent = jsonData[index].categoryName;   // 생성한 option 요소의 텍스트를 data의 categoryName으로 설정
+
+                    $categoryCode.appendChild($option);   // id가 'categoryCode'인 요소(select)의 하위 요소로 생성한 'option'을 추가
+                }
+            });
+    </script>
+</body>
+</html>

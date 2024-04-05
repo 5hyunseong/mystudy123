@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>detail.html</h1>
+    <div th:if="${menu.img != null}">
+        <img th:src="|../../${menu.img}|" width="100" height="100">
+    </div>
+    <div>
+        <p>메뉴번호: <span th:text="${menu.menuCode}"></span></p>
+        <p>메뉴이름: <span th:text="${menu.menuName}"></span></p>
+        <p>메뉴가격: <span th:text="${menu.menuPrice}"></span></p>
+        <p>카테고리코드: <span th:text="${menu.categoryCode}"></span></p>
+        <p>판매상태: <span th:text="${menu.orderableStatus}"></span></p>
+    </div>
+
+    <!-- 설명. a태그 사용해서 수정 페이지 이동-->
+    <a th:href="@{/menu/edit/{code}(code=${menu.menuCode})}">수정하기</a>
+    <button id="editButton">수정하기</button>
+    <!-- 삭제 버튼 -->
+    <form th:action="@{/menu/delete/{code}(code=${menu.menuCode})}" method="post">
+        <button type="submit">삭제하기</button>
+    </form>
+
+    <h1 th:text="${message}"></h1>
+    <div th:if="${img != null}">
+        <img th:src="${img}" width="480" height="360">
+        <p th:text="${singleFileDescription}"></p>
+    </div>
+    <div th:else>
+        <div th:each="img : ${imgs}">
+            <img th:src="${img}" width="480" height="360">
+        </div>
+        <p th:text="${multiFilesDescription}"></p>
+    </div>
+
+
+    <script>
+        /* 설명. Button id, javascript 이용해서 수정 페이지 이동*/
+        document.getElementById('editButton').addEventListener("click", function (){
+           window.location.href="/menu/edit/" + [[${menu.menuCode}]];
+        });
+    </script>
+</body>
+</html>

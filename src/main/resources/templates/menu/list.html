@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        const successMessage = `[[${successMessage}]]`;
+        if(successMessage){
+            alert(successMessage);
+        }
+    </script>
+</head>
+<body>
+<table>
+    <tr>
+        <th>메뉴번호</th>
+        <th>메뉴이름</th>
+        <th>메뉴가격</th>
+        <th>카테고리코드</th>
+        <th>판매상태</th>
+        <th>이미지</th>
+    </tr>
+    <tr th:each="menu : ${ menuList }">
+        <td th:text="${ menu.menuCode }"></td>
+        <td><a th:href="@{/menu/detail/{code}(code=${ menu.menuCode })}" th:text="${ menu.menuName }"></a></td>
+        <td th:text="${ menu.menuPrice }"></td>
+        <td th:text="${ menu.categoryCode }"></td>
+        <td th:text="${ menu.orderableStatus }"></td>
+        <td th:if="${menu.img != null}">
+            <img th:src="|../${menu.img}|" width="60" height="60">
+        </td>
+
+    </tr>
+
+
+</table>
+<button onclick="location.href='/'">메인으로</button>
+</body>
+</html>
